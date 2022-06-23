@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="jquery-3.5.1.min.js"></script>
+
+	<script>
+		$(()=>{
+
+			function showall(){
+
+				let para={
+					data:{},
+					url:"http://localhost:900/getbooks",
+					type:'get',
+					datatype:"json",
+					success: (recieve)=>{
+
+						books=recieve;
+						let bookcontent="";
+						for(let i=0; i<books.length;i++){
+							bookcontent+= "<br/>"+ books[i].bookid+ " "+ books[i].bookname+ " "+books[i].price;
+						}
+						$("#all").html(bookcontent);
+						},
+						error:(error)=>{ console.log("failed"+error)}
+					};
+					$.ajax(para);
+
+
+
+				}
+
+
+			
+
+
+			$("#add").click(()=>{
+
+				let input = {x:$("#id").val(), y:$("#name").val(), z:$("#price").val()};
+
+				let para={
+					data:  input,
+					url:"http://localhost:900/addbook",
+					type:'get',
+					datatype:"json",
+					success: (output)=>{
+						if(output){
+						$("#msg").html("book added succesfully");
+						}
+						else{
+							$("#msg").html("book could not be added");
+						}
+						$("#name").val("");
+						$("#price").val("");
+						showall();
+					},
+					error:(error)=>{ console.log("failed"+error);}
+
+
+				};
+				$.ajax(para);
+			});
+
+
+			showall();
+
+
+		});
+
+	</script>
+
+</head>
+<body>
+	<span> Book id </span><input type="text" id="id" placeholder="bookid"><span id="msg">Message</span>
+	<br><span> Book name </span><input type="text" id="name"  placeholder="bookname">
+	<br><span> Price</span><input type="text" id="price" placeholder="price">
+	<br><button id="add">add a book</button>
+	<br><p id="all">show all books here</p>
+
+</body>
+</html>
